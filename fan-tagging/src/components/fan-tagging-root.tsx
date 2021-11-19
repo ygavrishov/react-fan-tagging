@@ -22,19 +22,29 @@ export const FanTaggingRoot: FunctionComponent<FanTaggingProps> = (props: FanTag
     const selectFanTag = useCallback((fanTagId: number) => {
         console.log(`select fan tag: ${fanTagId}`);
         setFanTaggingState(state => {
+            const selectedFanTag = state.fanTags.find(t => t.fanTagId === fanTagId);
             const fanTags = state.fanTags.map(t => ({ ...t, selected: t.fanTagId === fanTagId }));
-            return { ...state, fanTags }
+            const videos = state.videos.map(v => ({ ...v, selected: v.videoId === selectedFanTag?.videoId }))
+            return { ...state, fanTags, videos }
         })
     }, []);
 
-    useEffect(() =>{
+    const selectVideo = useCallback((videoId: number) => {
+        console.log(`select video: ${videoId}`);
+    }, []);
+
+    const buttonClick = useCallback(() => {
+        console.log('button pressed.');
+    }, []);
+
+    useEffect(() => {
         console.log('Fan Tagging Root render');
     });
 
     return (
         <MainArea>
-            <VideoList videos={fanTaggingState.videos} />
-            <Editor />
+            <VideoList videos={fanTaggingState.videos} videoSelected={selectVideo} />
+            <Editor buttonClick={buttonClick} />
             <FanTagList fanTags={fanTaggingState.fanTags} selectFanTag={selectFanTag} />
         </MainArea>
     );
