@@ -5,7 +5,7 @@ import { FanTagList } from "./fan-tag-list";
 import { VideoList } from "./video-list";
 import styled from 'styled-components'
 import { getTestState } from "../types/test-data";
-import { setCurrentVideoAndTag } from "../state-mutators/video-and-tags";
+import { deleteFanTag, setCurrentVideoAndTag } from "../state-mutators/video-and-tags";
 
 const MainArea = styled.div`
     margin-left:20px;
@@ -21,15 +21,21 @@ type FanTaggingProps = {
 export const FanTaggingRoot: FunctionComponent<FanTaggingProps> = (props: FanTaggingProps) => {
     const [fanTaggingState, setFanTaggingState] = useState<FanTaggingState>(getTestState());
 
-    const selectFanTag = useCallback((fanTagId: number) => {
+    const selectFanTagFunc = useCallback((fanTagId: number) => {
         console.log(`select fan tag: ${fanTagId}`);
         setFanTaggingState(state => setCurrentVideoAndTag(state, undefined, fanTagId));
     }, []);
 
-    const selectVideo = useCallback((videoId: number) => {
+    const selectVideoFunc = useCallback((videoId: number) => {
         console.log(`select video: ${videoId}`);
         setFanTaggingState(state => setCurrentVideoAndTag(state, videoId, undefined));
     }, []);
+
+    const deleteFanTagFunc = useCallback((fanTagId: number) => {
+        console.log(`delete fan tag: ${fanTagId}`);
+        setFanTaggingState(state => deleteFanTag(state, fanTagId));
+    }, []);
+
 
     const buttonClick = useCallback(() => {
         console.log('button pressed.');
@@ -41,9 +47,9 @@ export const FanTaggingRoot: FunctionComponent<FanTaggingProps> = (props: FanTag
 
     return (
         <MainArea>
-            <VideoList videos={fanTaggingState.videos} videoSelected={selectVideo} />
+            <VideoList videos={fanTaggingState.videos} videoSelected={selectVideoFunc} />
             <Editor buttonClick={buttonClick} />
-            <FanTagList fanTags={fanTaggingState.fanTags} selectFanTag={selectFanTag} />
+            <FanTagList fanTags={fanTaggingState.fanTags} selectFanTag={selectFanTagFunc} deleteFanTag={deleteFanTagFunc} />
         </MainArea>
     );
 }

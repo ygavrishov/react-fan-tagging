@@ -20,5 +20,9 @@ export function setCurrentVideoAndTag(state: FanTaggingState, videoId: number | 
         : state.fanTags.map(t => ({ ...t, inSelectedVideo: t.videoId === videoId, selected: t.fanTagId === fanTagId }));
 
     return { ...state, fanTags, videos }
+}
 
+export function deleteFanTag(state: FanTaggingState, fanTagId: number): FanTaggingState {
+    const fanTags = state.fanTags.filter(t => t.fanTagId !== fanTagId);
+    return { ...state, fanTags }
 }
