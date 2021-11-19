@@ -1,9 +1,11 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react"
-import { FanTaggingState, getTestState } from "../types/internal-types";
+import { FanTaggingState } from "../types/internal-types";
 import { Editor } from "./editor";
 import { FanTagList } from "./fan-tag-list";
 import { VideoList } from "./video-list";
 import styled from 'styled-components'
+import { getTestState } from "../types/test-data";
+import { setCurrentVideoAndTag } from "../state-mutators/video-and-tags";
 
 const MainArea = styled.div`
     margin-left:20px;
@@ -21,16 +23,12 @@ export const FanTaggingRoot: FunctionComponent<FanTaggingProps> = (props: FanTag
 
     const selectFanTag = useCallback((fanTagId: number) => {
         console.log(`select fan tag: ${fanTagId}`);
-        setFanTaggingState(state => {
-            const selectedFanTag = state.fanTags.find(t => t.fanTagId === fanTagId);
-            const fanTags = state.fanTags.map(t => ({ ...t, selected: t.fanTagId === fanTagId }));
-            const videos = state.videos.map(v => ({ ...v, selected: v.videoId === selectedFanTag?.videoId }))
-            return { ...state, fanTags, videos }
-        })
+        setFanTaggingState(state => setCurrentVideoAndTag(state, undefined, fanTagId));
     }, []);
 
     const selectVideo = useCallback((videoId: number) => {
         console.log(`select video: ${videoId}`);
+        setFanTaggingState(state => setCurrentVideoAndTag(state, videoId, undefined));
     }, []);
 
     const buttonClick = useCallback(() => {

@@ -13,7 +13,7 @@ export const FanTagList: FunctionComponent<FanTagListProps> = memo(({ fanTags, s
         <ul>
             {fanTags.map(t => <li key={t.fanTagId}
                 onClick={() => selectFanTag(t.fanTagId)}
-                style={{ backgroundColor: t.selected ? "orange" : "" }}>
+                style={{ backgroundColor: t.selected ? "orange" : (t.inSelectedVideo ? "grey" : "") }}>
                 {t.videoId}-{t.fanTagId}-{t.text}
             </li>)}
         </ul>
