@@ -7,6 +7,8 @@ import styled from 'styled-components'
 import { getTestState } from "../types/test-data";
 import { deleteFanTag, setCurrentVideoAndTag } from "../state-mutators/video-and-tags";
 import { useNavBlock } from "../hooks/nav-block-hook";
+import { useFanTagText } from "../hooks/edit-fan-tag-text-hook";
+import { useFanTagEditingButtons } from "../hooks/fan-tag-editing-buttons-hook";
 
 const MainArea = styled.div`
     margin-left:20px;
@@ -50,6 +52,8 @@ export const FanTaggingRoot: FunctionComponent<FanTaggingProps> = (props: FanTag
                 selectedFanTagId={fanTaggingState.selectedFanTagId}
                 selectFanTag={selectFanTagFunc}
                 navigationProps={useNavBlock(fanTaggingState, setFanTaggingState)}
+                editTextProps={useFanTagText(fanTaggingState, setFanTaggingState)}
+                editingButtonsProps={useFanTagEditingButtons(fanTaggingState, setFanTaggingState)}
             />
             <FanTagList
                 fanTags={fanTaggingState.fanTags}

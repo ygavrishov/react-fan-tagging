@@ -81,3 +81,23 @@ export function isPrevFanTagButtonEnabled(state: FanTaggingState): boolean {
     const index = state.currentFanTags.findIndex(t => t.selected);
     return index > 0;
 }
+
+export function editSelectedFanTagText(state: FanTaggingState, text: string): FanTaggingState {
+    return { ...state, hasChanges: true, editingTagText: text };
+}
+
+export function completeFanTagEditing(state: FanTaggingState): FanTaggingState {
+    const currentFanTag = state.fanTags.find(t => t.selected);
+    if (!currentFanTag || !state.editingTagText)
+        return state;
+    currentFanTag.text = state.editingTagText;
+    //update fan tag lists
+    const fanTags = state.fanTags.map(t => ({ ...t }));
+    const currentFanTags = state.currentFanTags.map(t => ({ ...t }));
+
+    return { ...state, fanTags, currentFanTags, hasChanges: false, editingTagText: undefined };
+}
+
+export function cancelFanTagEditing(state: FanTaggingState): FanTaggingState {
+    return { ...state, hasChanges: false, editingTagText: undefined };
+}

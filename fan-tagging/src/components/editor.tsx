@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import { Video } from "./video";
 import { FanTagListItem, VideoListItem } from "../types/internal-types";
 import { FanTagNavigationBlock, FanTagNavigationProps } from "./fan-tag-navigation-block";
+import { EditFanTagText, EditFanTagTextProps } from "./edit-fan-tag-text";
+import { FanTagEditingButtons, FanTagEditingButtonsProps } from "./fan-tag-editing-buttons";
 
 const MainArea = styled.div`
     display:flex;
@@ -19,6 +21,8 @@ type EditorProps = {
     selectedFanTagId: number | undefined,
     selectFanTag: (fanTagId: number) => void,
     navigationProps: FanTagNavigationProps,
+    editTextProps: EditFanTagTextProps,
+    editingButtonsProps: FanTagEditingButtonsProps,
 }
 export const Editor: FunctionComponent<EditorProps> = memo((props: EditorProps) => {
     useEffect(() => {
@@ -40,6 +44,8 @@ export const Editor: FunctionComponent<EditorProps> = memo((props: EditorProps) 
                     <FanTagNavigationBlock
                         {...props.navigationProps}
                     />
+                    <EditFanTagText {...props.editTextProps} />
+                    <FanTagEditingButtons {...props.editingButtonsProps} />
                 </>) : undefined}
         </MainArea>
     );

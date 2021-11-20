@@ -24,4 +24,7 @@ export type FanTaggingState = {
     currentVideo: VideoListItem | undefined,
     currentFanTags: FanTagListItem[],
     selectedFanTagId: number | undefined,
+
+    editingTagText: string | undefined,
+    hasChanges: boolean,
 }
