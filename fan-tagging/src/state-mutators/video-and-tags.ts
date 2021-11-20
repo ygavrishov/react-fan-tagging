@@ -28,6 +28,11 @@ export function setCurrentVideoAndTag(state: FanTaggingState, videoId: number | 
 }
 
 export function deleteFanTag(state: FanTaggingState, fanTagId: number): FanTaggingState {
-    const fanTags = state.fanTags.filter(t => t.fanTagId !== fanTagId);
-    return { ...state, fanTags }
+    const deletedTag = state.fanTags.find(t => t.fanTagId === fanTagId);
+    const currentFanTags = !deletedTag?.inSelectedVideo
+        ? state.currentFanTags
+        : state.currentFanTags.filter(t => t.fanTagId !== fanTagId);
+
+        const fanTags = state.fanTags.filter(t => t.fanTagId !== fanTagId);
+    return { ...state, fanTags, currentFanTags }
 }
