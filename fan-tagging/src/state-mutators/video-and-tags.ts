@@ -9,17 +9,22 @@ export function setCurrentVideoAndTag(state: FanTaggingState, videoId: number | 
         fanTagId = state.fanTags.find(t => t.videoId === videoId)?.fanTagId;
     }
 
-    const selectedVideoId = state.videos.find(v => v.selected)?.videoId;
-    const videos = selectedVideoId && selectedVideoId === videoId
+    const prevVideoId = state.videos.find(v => v.selected)?.videoId;
+    const videos = prevVideoId && prevVideoId === videoId
         ? state.videos
         : state.videos.map(v => ({ ...v, selected: v.videoId === videoId }));
 
-    const selectedFanTagId = state.fanTags.find(t => t.selected)?.fanTagId;
-    const fanTags = selectedFanTagId && selectedFanTagId === fanTagId
+    const prevFanTagId = state.fanTags.find(t => t.selected)?.fanTagId;
+    const fanTags = prevFanTagId && prevFanTagId === fanTagId
         ? state.fanTags
         : state.fanTags.map(t => ({ ...t, inSelectedVideo: t.videoId === videoId, selected: t.fanTagId === fanTagId }));
 
-    return { ...state, fanTags, videos }
+    const currentVideo = videos.find(v => v.selected);
+    const currentFanTags = prevVideoId && prevVideoId === videoId
+        ? state.currentFanTags
+        : fanTags.filter(t => t.videoId === videoId);
+
+    return { ...state, fanTags, videos, currentVideo, currentFanTags }
 }
 
 export function deleteFanTag(state: FanTaggingState, fanTagId: number): FanTaggingState {

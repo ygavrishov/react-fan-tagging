@@ -48,8 +48,17 @@ export const FanTaggingRoot: FunctionComponent<FanTaggingProps> = (props: FanTag
     return (
         <MainArea>
             <VideoList videos={fanTaggingState.videos} videoSelected={selectVideoFunc} />
-            <Editor buttonClick={buttonClick} />
-            <FanTagList fanTags={fanTaggingState.fanTags} selectFanTag={selectFanTagFunc} deleteFanTag={deleteFanTagFunc} />
+            <Editor
+                buttonClick={buttonClick}
+                video={fanTaggingState.currentVideo}
+                fanTags={fanTaggingState.currentFanTags}
+                selectedFanTagId={fanTaggingState.fanTags.find(t => t.selected)?.fanTagId}
+                selectFanTag={selectFanTagFunc}
+            />
+            <FanTagList
+                fanTags={fanTaggingState.fanTags}
+                selectFanTag={selectFanTagFunc}
+                deleteFanTag={deleteFanTagFunc} />
         </MainArea>
     );
 }

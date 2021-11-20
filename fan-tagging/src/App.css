@@ -1,3 +1,7 @@
+.noUi-connects .noUi-connect.active {
+	background-color: blue;
+}
+
 .App {
   text-align: center;
 }

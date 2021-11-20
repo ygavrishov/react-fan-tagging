@@ -19,7 +19,7 @@ export const VideoList: FunctionComponent<VideoListProps> = memo(({ videos, vide
                 onClick={() => videoSelected(v.videoId)}
             >
                 <p>{v.videoId}</p>
-                <img src={v.url} alt="" />
+                <img src={v.thumbnailUrl} alt="" />
             </div>
         </div>)}
     </div>
