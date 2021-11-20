@@ -40,7 +40,7 @@ export const FanTaggingRoot: FunctionComponent<FanTaggingProps> = (props: FanTag
     }, []);
 
     useEffect(() => {
-        console.log('Fan Tagging Root render');
+        console.log('Fan Tagging Root render', fanTaggingState);
     });
 
     return (

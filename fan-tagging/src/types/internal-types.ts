@@ -25,6 +25,6 @@ export type FanTaggingState = {
     currentFanTags: FanTagListItem[],
     selectedFanTagId: number | undefined,
 
-    editingTagText: string | undefined,
+    editingFanTags: FanTagListItem[];
     hasChanges: boolean,
 }

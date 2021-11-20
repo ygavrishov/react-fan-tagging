@@ -1,4 +1,4 @@
-import { FanTaggingState } from "../types/internal-types";
+import { FanTaggingState, FanTagListItem } from "../types/internal-types";
 
 export function setCurrentVideoAndTag(state: FanTaggingState, videoId: number | undefined, fanTagId: number | undefined): FanTaggingState {
 
@@ -26,7 +26,7 @@ export function setCurrentVideoAndTag(state: FanTaggingState, videoId: number | 
 
     const selectedFanTagId = fanTagId;
 
-    return { ...state, fanTags, videos, currentVideo, currentFanTags, selectedFanTagId }
+    return { ...state, fanTags, videos, currentVideo, currentFanTags, selectedFanTagId, hasChanges: false }
 }
 
 export function deleteFanTag(state: FanTaggingState, fanTagId: number): FanTaggingState {
@@ -50,7 +50,7 @@ export function moveToNextFanTag(state: FanTaggingState): FanTaggingState {
         const selectedFanTagId = nextFanTag.fanTagId;
         const fanTags = state.fanTags.map(t => ({ ...t, selected: t.fanTagId === selectedFanTagId }));
         const currentFanTags = state.currentFanTags.map(t => ({ ...t, selected: t.fanTagId === selectedFanTagId }));
-        return { ...state, fanTags, currentFanTags, selectedFanTagId }
+        return { ...state, fanTags, currentFanTags, selectedFanTagId, hasChanges: false }
     }
     else {
         return state;
@@ -64,7 +64,7 @@ export function moveToPrevFanTag(state: FanTaggingState): FanTaggingState {
         const selectedFanTagId = state.currentFanTags[index - 1].fanTagId;
         const fanTags = state.fanTags.map(t => ({ ...t, selected: t.fanTagId === selectedFanTagId }));
         const currentFanTags = state.currentFanTags.map(t => ({ ...t, selected: t.fanTagId === selectedFanTagId }));
-        return { ...state, fanTags, currentFanTags, selectedFanTagId }
+        return { ...state, fanTags, currentFanTags, selectedFanTagId, hasChanges: false }
     }
     else {
         return state;
@@ -82,22 +82,35 @@ export function isPrevFanTagButtonEnabled(state: FanTaggingState): boolean {
     return index > 0;
 }
 
-export function editSelectedFanTagText(state: FanTaggingState, text: string): FanTaggingState {
-    return { ...state, hasChanges: true, editingTagText: text };
+export function editSelectedFanTagText(state: FanTaggingState, fanTagId: number, text: string): FanTaggingState {
+    let editingTag = state.editingFanTags.find(t => t.fanTagId === fanTagId);
+    let editingFanTags: FanTagListItem[];
+    if (!editingTag) {
+        editingTag = { fanTagId, text } as FanTagListItem;
+        editingFanTags = [...state.editingFanTags, editingTag];
+    }
+    else {
+        editingFanTags = [...state.editingFanTags];
+    }
+    return { ...state, hasChanges: true, editingFanTags };
 }
 
 export function completeFanTagEditing(state: FanTaggingState): FanTaggingState {
-    const currentFanTag = state.fanTags.find(t => t.selected);
-    if (!currentFanTag || !state.editingTagText)
-        return state;
-    currentFanTag.text = state.editingTagText;
+    state.editingFanTags.forEach(t => {
+        const editingFanTag = state.fanTags.find(t1 => t1.fanTagId === t.fanTagId);
+        if (editingFanTag) {
+            if (t.text)
+                editingFanTag.text = t.text;
+        }
+    });
+
     //update fan tag lists
     const fanTags = state.fanTags.map(t => ({ ...t }));
     const currentFanTags = state.currentFanTags.map(t => ({ ...t }));
 
-    return { ...state, fanTags, currentFanTags, hasChanges: false, editingTagText: undefined };
+    return { ...state, fanTags, currentFanTags, hasChanges: false, editingFanTags: [] };
 }
 
 export function cancelFanTagEditing(state: FanTaggingState): FanTaggingState {
-    return { ...state, hasChanges: false, editingTagText: undefined };
+    return { ...state, hasChanges: false, editingFanTags: [] };
 }
