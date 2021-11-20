@@ -1,5 +1,10 @@
 import { FunctionComponent, memo, useEffect } from "react";
 import { FanTagListItem } from "../types/internal-types";
+import styled from 'styled-components'
+
+const MainArea = styled.div`
+    width:300px;
+`;
 
 type FanTagListProps = {
     fanTags: FanTagListItem[],
@@ -10,7 +15,7 @@ export const FanTagList: FunctionComponent<FanTagListProps> = memo(({ fanTags, s
     useEffect(() => {
         console.log('Fan Tag List render');
     });
-    return <>
+    return <MainArea>
         <ul>
             {fanTags.map(t => <li key={t.fanTagId}
                 style={{ backgroundColor: t.selected ? "orange" : (t.inSelectedVideo ? "grey" : "") }}>
@@ -19,5 +24,5 @@ export const FanTagList: FunctionComponent<FanTagListProps> = memo(({ fanTags, s
                     style={{ margin: "5px" }} onClick={() => deleteFanTag(t.fanTagId)}>X</a>
             </li>)}
         </ul>
-    </>
+    </MainArea>
 });
