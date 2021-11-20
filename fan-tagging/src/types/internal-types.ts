@@ -20,6 +20,8 @@ export type FanTagListItem = {
 export type FanTaggingState = {
     videos: VideoListItem[],
     fanTags: FanTagListItem[],
+
     currentVideo: VideoListItem | undefined,
-    currentFanTags: FanTagListItem[]
+    currentFanTags: FanTagListItem[],
+    selectedFanTagId: number | undefined,
 }

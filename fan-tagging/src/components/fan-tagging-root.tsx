@@ -5,7 +5,8 @@ import { FanTagList } from "./fan-tag-list";
 import { VideoList } from "./video-list";
 import styled from 'styled-components'
 import { getTestState } from "../types/test-data";
-import { deleteFanTag, setCurrentVideoAndTag } from "../state-mutators/video-and-tags";
+import { deleteFanTag, isNextFanTagButtonEnabled, isPrevFanTagButtonEnabled, moveToNextFanTag, moveToPrevFanTag, setCurrentVideoAndTag } from "../state-mutators/video-and-tags";
+import { FanTagNavigationProps } from "./fan-tag-navigation-block";
 
 const MainArea = styled.div`
     margin-left:20px;
@@ -36,10 +37,22 @@ export const FanTaggingRoot: FunctionComponent<FanTaggingProps> = (props: FanTag
         setFanTaggingState(state => deleteFanTag(state, fanTagId));
     }, []);
 
-
-    const buttonClick = useCallback(() => {
-        console.log('button pressed.');
+    const moveToPrevTagFunc = useCallback(() => {
+        console.log(`move to prev`);
+        setFanTaggingState(state => moveToPrevFanTag(state));
     }, []);
+
+    const moveToNextTagFunc = useCallback(() => {
+        console.log(`move to next`);
+        setFanTaggingState(state => moveToNextFanTag(state));
+    }, []);
+
+    const navBlockProps = {
+        moveToNext: moveToNextTagFunc,
+        moveToPrev: moveToPrevTagFunc,
+        nextEnabled: isNextFanTagButtonEnabled(fanTaggingState),
+        prevEnabled: isPrevFanTagButtonEnabled(fanTaggingState),
+    } as FanTagNavigationProps;
 
     useEffect(() => {
         console.log('Fan Tagging Root render');
@@ -49,11 +62,11 @@ export const FanTaggingRoot: FunctionComponent<FanTaggingProps> = (props: FanTag
         <MainArea>
             <VideoList videos={fanTaggingState.videos} videoSelected={selectVideoFunc} />
             <Editor
-                buttonClick={buttonClick}
                 video={fanTaggingState.currentVideo}
                 fanTags={fanTaggingState.currentFanTags}
-                selectedFanTagId={fanTaggingState.fanTags.find(t => t.selected)?.fanTagId}
+                selectedFanTagId={fanTaggingState.selectedFanTagId}
                 selectFanTag={selectFanTagFunc}
+                navigationProps={navBlockProps}
             />
             <FanTagList
                 fanTags={fanTaggingState.fanTags}
