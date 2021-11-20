@@ -5,8 +5,8 @@ import { FanTagList } from "./fan-tag-list";
 import { VideoList } from "./video-list";
 import styled from 'styled-components'
 import { getTestState } from "../types/test-data";
-import { deleteFanTag, isNextFanTagButtonEnabled, isPrevFanTagButtonEnabled, moveToNextFanTag, moveToPrevFanTag, setCurrentVideoAndTag } from "../state-mutators/video-and-tags";
-import { FanTagNavigationProps } from "./fan-tag-navigation-block";
+import { deleteFanTag, setCurrentVideoAndTag } from "../state-mutators/video-and-tags";
+import { useNavBlock } from "../hooks/nav-block-hook";
 
 const MainArea = styled.div`
     margin-left:20px;
@@ -37,23 +37,6 @@ export const FanTaggingRoot: FunctionComponent<FanTaggingProps> = (props: FanTag
         setFanTaggingState(state => deleteFanTag(state, fanTagId));
     }, []);
 
-    const moveToPrevTagFunc = useCallback(() => {
-        console.log(`move to prev`);
-        setFanTaggingState(state => moveToPrevFanTag(state));
-    }, []);
-
-    const moveToNextTagFunc = useCallback(() => {
-        console.log(`move to next`);
-        setFanTaggingState(state => moveToNextFanTag(state));
-    }, []);
-
-    const navBlockProps = {
-        moveToNext: moveToNextTagFunc,
-        moveToPrev: moveToPrevTagFunc,
-        nextEnabled: isNextFanTagButtonEnabled(fanTaggingState),
-        prevEnabled: isPrevFanTagButtonEnabled(fanTaggingState),
-    } as FanTagNavigationProps;
-
     useEffect(() => {
         console.log('Fan Tagging Root render');
     });
@@ -66,7 +49,7 @@ export const FanTaggingRoot: FunctionComponent<FanTaggingProps> = (props: FanTag
                 fanTags={fanTaggingState.currentFanTags}
                 selectedFanTagId={fanTaggingState.selectedFanTagId}
                 selectFanTag={selectFanTagFunc}
-                navigationProps={navBlockProps}
+                navigationProps={useNavBlock(fanTaggingState, setFanTaggingState)}
             />
             <FanTagList
                 fanTags={fanTaggingState.fanTags}
